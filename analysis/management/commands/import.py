@@ -1,6 +1,8 @@
 import sys
 import re
 
+from analysis.models import Show, Episode
+
 ENTRY_START = 297
 RATING_RANGE = (20, 24)
 TITLE_START = 26
@@ -20,9 +22,9 @@ episode = r'{.*}'
 for entry in entries[ENTRY_START:ENTRY_START+100]:
     try:
         rating = float(entry[start:end])
-        show = re.search(r'(.*?)\s+{', entry[TITLE_START:])
-        if show:
-            show = show.group(1)
+        show_name = re.search(r'(.*?)\s+{', entry[TITLE_START:])
+        if show_name:
+            show_name = show_name.group(1)
         episode_name = re.search(r'{(.*)}', entry[TITLE_START:])
         if episode_name:
             episode_name = episode_name.group(1)
@@ -30,26 +32,30 @@ for entry in entries[ENTRY_START:ENTRY_START+100]:
             season, episode = episode_comp.group(1), episode_comp.group(2)
         else:
             episode_name = season = episode = None
-        print "rating:", rating
-        print "show:", show
-        print "episode name:", episode_name
-        print "season:", season
-        print "episode:", episode
-        print "\n"
+        # print "rating:", rating
+        # print "show:", show_name
+        # print "episode name:", episode_name
+        # print "season:", season
+        # print "episode:", episode
+        # print "\n"
     except ValueError:
         print "reached terminator"
         break
     if capturing and episode:
         pass
         # we're capturing and there's another episode to add to the current show
-        # print "NEW EPISODE:", rating, show
+        e = Episode(name=episode_name, rating=rating, show=s, season=season, 
+        e.save()
     elif capturing:
         # we're capturing and there's no match
         capturing = False
     elif episode:
         # we're not capturing and we just hit a match
-        #print "NEW TV SHOW:", prev_rating, prev_show
-        # print "NEW EPISODE:", rating, show
+        s = Show(name=prev_show, rating=prev_rating)
+        s.save()
+        e = Episode(name=episode_name, rating=rating, show=s, season=season, 
+                    episode=episode)
+        e.save()
         capturing = True
     prev_rating = rating
-    prev_show = show
+    prev_show = show_name
