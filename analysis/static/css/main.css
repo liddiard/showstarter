@@ -1,0 +1,7 @@
+div.bar {
+  background-color: orange;
+  width: 3px;
+  display: inline-block; }
+  div.bar:hover {
+    background-color: yellow;
+    width: 6px; }

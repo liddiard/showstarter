@@ -1,0 +1,10 @@
+div.bar {
+    background-color: orange;
+    width: 3px;
+    display: inline-block;
+
+    &:hover {
+        background-color: yellow;
+        width: 6px;
+    }
+}

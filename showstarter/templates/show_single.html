@@ -2,12 +2,28 @@
 
 {% block content %}
 
-<h1>{{ show.name }}</h1>
+<script>
+    window.episodes = [
+        {% for episode in episodes %}
+        {
+            name: "{{ episode.name }}",
+            rating: {{ episode.rating }},
+            season: {{ episode.season }},
+            episode: {{ episode.episode }}
+        },
+        {% endfor %}
+    ]
+    $(document).ready(function(){
+        d3.select("body")
+          .selectAll('p')
+          .data(episodes)
+          .enter()
+          .append('div')
+          .attr('title', function(d){ return '['+d.rating+'] '+'(#'+d.season+'.'+d.episode+') '+d.name })
+          .attr('class', 'bar').style('height', function(d){ return d.rating*20+"px" });
+    });
+</script>
 
-<ul>
-{% for episode in episodes %}
-    <li>({{ episode.rating }}) {{ episode.name }}</li>
-{% endfor %}
-</ul>
+<h1>{{ show.name }}</h1>
 
 {% endblock %}
