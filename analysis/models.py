@@ -8,7 +8,7 @@ class Show(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
 
     def __unicode__(self):
-        return "%s_(%s)" % (self.name, self.year)
+        return "%s (%s)" % (self.name, self.year)
 
 
 class Episode(models.Model):
