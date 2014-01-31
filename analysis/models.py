@@ -3,6 +3,7 @@ from django.db import models
 
 class Show(models.Model):
     name = models.CharField(max_length=128)
+    year = models.PositiveIntegerField(null=True, blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=1)
 
     def __unicode__(self):

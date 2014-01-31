@@ -15,16 +15,16 @@ with open(input_file, 'r') as f:
 start = RATING_RANGE[0]
 end = RATING_RANGE[1]
 capturing = False
-prev_rating = None
-prev_show = None
+prev_show = prev_rating = None
 episode_re = r'{(?:(?P<episode_name>.*?)\s+)?\(#(?P<season>\d+)\.(?P<episode_number>\d+)\)}'
+show_re = r'"(?P<name>.*?)"\s+\((?P<year>\d+)?\S+?\)'
 
 for entry in entries[ENTRY_START:]:
     try:
         rating = float(entry[start:end])
     except ValueError:
         print "reached terminator"
-        break
+        sys.exit(0)
     else:
         episode = re.search(episode_re, entry[TITLE_START:])
         if episode:
@@ -35,7 +35,7 @@ for entry in entries[ENTRY_START:]:
             season = episode.group('season')
             episode_number = episode.group('episode_number')
         else:
-            show_name = entry[TITLE_START:][:127]
+            show = re.search(show_re, entry[TITLE_START:])
             episode_name = season = episode_number = None
         # print "rating:", rating
         # print "show:", show_name
@@ -53,11 +53,16 @@ for entry in entries[ENTRY_START:]:
         capturing = False
     elif episode:
         # we're not capturing and we just hit a match
-        s = Show(name=prev_show, rating=prev_rating)
+        if prev_show.group('year'):
+            year = prev_show.group('year')
+        else:
+            year = None
+        s = Show(name=prev_show.group('name')[:127], 
+                 year=year, rating=prev_rating)
         s.save()
         e = Episode(name=episode_name, rating=rating, show=s, season=season, 
                     episode=episode_number)
         e.save()
         capturing = True
+    prev_show = show
     prev_rating = rating
-    prev_show = show_name
