@@ -17,7 +17,7 @@ end = RATING_RANGE[1]
 capturing = False
 prev_show = prev_rating = None
 episode_re = r'{(?:(?P<episode_name>.*?)\s+)?\(#(?P<season>\d+)\.(?P<episode_number>\d+)\)}'
-show_re = r'"(?P<name>.*?)"\s+\((?P<year>\d+)?\S+?\)'
+show_re = r'"(?P<name>.*?)"\s+\((?P<year>\d+)?(.*)?\)'
 
 for entry in entries[ENTRY_START:]:
     try:
