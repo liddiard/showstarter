@@ -17,7 +17,7 @@ end = RATING_RANGE[1]
 capturing = False
 prev_rating = None
 prev_show = None
-episode_re = r'{(?P<episode_name>.*?)\s+\(#(?P<season>\d+)\.(?P<episode_number>\d+)\)}'
+episode_re = r'{(?:(?P<episode_name>.*?)\s+)?\(#(?P<season>\d+)\.(?P<episode_number>\d+)\)}'
 
 for entry in entries[ENTRY_START:]:
     try:
@@ -28,7 +28,10 @@ for entry in entries[ENTRY_START:]:
     else:
         episode = re.search(episode_re, entry[TITLE_START:])
         if episode:
-            episode_name = episode.group('episode_name')[:127]
+            if episode.group('episode_name'):
+                episode_name = episode.group('episode_name')[:127]
+            else:
+                episode_name = ''
             season = episode.group('season')
             episode_number = episode.group('episode_number')
         else:

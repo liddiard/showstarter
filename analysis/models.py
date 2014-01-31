@@ -11,7 +11,7 @@ class Show(models.Model):
 
 class Episode(models.Model):
     show = models.ForeignKey('Show')
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     season = models.PositiveIntegerField()
     episode = models.PositiveIntegerField()
