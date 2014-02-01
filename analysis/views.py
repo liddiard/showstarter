@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.views.generic.base import TemplateView
 
 from .models import Show, Episode
@@ -18,7 +19,7 @@ class SingleShowView(TemplateView):
         s = Show.objects.get(pk=show)
         context['show'] = s
         episodes = Episode.objects.filter(show=s).order_by('season', 'episode')
-        context['episodes'] = episodes
+        context['episodes'] = serializers.serialize('json', episodes)
         return context
 
 

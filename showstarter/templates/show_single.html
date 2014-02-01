@@ -3,24 +3,17 @@
 {% block content %}
 
 <script>
-    window.episodes = [
-        {% for episode in episodes %}
-        {
-            name: "{{ episode.name }}",
-            rating: {{ episode.rating }},
-            season: {{ episode.season }},
-            episode: {{ episode.episode }}
-        },
-        {% endfor %}
-    ]
+
+    var episodes = {{ episodes|safe }};
+
     $(document).ready(function(){
         d3.select("body")
           .selectAll('p')
           .data(episodes)
           .enter()
           .append('div')
-          .attr('title', function(d){ return '['+d.rating+'] '+'(#'+d.season+'.'+d.episode+') '+d.name })
-          .attr('class', 'bar').style('height', function(d){ return d.rating*20+"px" });
+          .attr('title', function(d){ return '['+d.fields.rating+'] '+'(#'+d.fields.season+'.'+d.fields.episode+') '+d.fields.name })
+          .attr('class', 'bar').style('height', function(d){ return d.fields.rating*20+"px" });
     });
 </script>
 
